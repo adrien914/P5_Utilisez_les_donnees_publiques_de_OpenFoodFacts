@@ -42,7 +42,7 @@ class Dialogue:
                 choice = int(input())
                 clear()
                 if 0 <= choice < len(categories):
-                    return self.show_products(categories[choice]["url"])
+                    return self.show_products(categories[choice])
                 print("Choix inconnu")
             except ValueError:
                 clear()
@@ -52,7 +52,7 @@ class Dialogue:
         print("substitutes")
 
     def show_products(self, category):
-        request = requests.get(category + ".json")
+        request = requests.get(category["url"] + ".json")
         products = request.json()["products"]
         options = []
         for index, product in enumerate(products):
@@ -63,14 +63,40 @@ class Dialogue:
                 choice = int(input())
                 clear()
                 if 0 <= choice < len(options):
-                    return self.show_product_info(options[choice])
+                    return self.show_product_info(options[choice], category)
                 else:
                     print("Choix inconnu")
             except ValueError:
                 clear()
                 print("Veuillez entrer un nombre entier svp")
 
-    def show_product_info(self, product):
+    @staticmethod
+    def generate_search_params(category, nutrition_grade):
+        params = "?action=process&" \
+                 "tagtype_0=categories&" \
+                 "tag_contains_0=contains&" \
+                 "tag_0={}&" \
+                 "tagtype_1=nutrition_grades&" \
+                 "tag_contains_1=contains&" \
+                 "tag_1={}&" \
+                 "json=1".format(category["id"], nutrition_grade)
+        return params
+
+    def show_product_info(self, product, category):
         print(product["product_name"])
+        print(category)
+        search_url = "https://fr.openfoodfacts.org/cgi/search.pl"
+        for i in range(0, 5):
+            # get ascii value of A and add the current index to it so we can get the next letters
+            nutrition_grade = chr(ord("A") + i)
+            params = Dialogue.generate_search_params(category, nutrition_grade)
+            r = requests.get(search_url + params).json()
+            if r["count"]:
+                substitut = r["products"][0]
+                print("Substitut:")
+                print("Nom:", substitut["product_name"])
+                print("Grade nutritionnel", substitut["nutrition_grades"])
+                print("Ou l'acheter:", substitut["stores"])
+                break
         if "stores" in product:
             print(product["stores"])
