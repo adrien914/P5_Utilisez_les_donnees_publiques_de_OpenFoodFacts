@@ -39,10 +39,13 @@ class Dialogue:
         categories = request.json()["tags"][:10]
         for index, category in enumerate(categories):
             print(str(index) + ". " + category["name"])
+        print("-1. Revenir au menu principal")
         while True:
             try:
                 choice = int(input())
                 clear()
+                if choice == -1:
+                    self.main_menu()
                 if 0 <= choice < len(categories):
                     return self.show_products(categories[choice])
                 print("Choix inconnu")
@@ -55,16 +58,20 @@ class Dialogue:
         print("Choisissez un aliment:")
         for index, aliment in enumerate(aliments):
             print(str(index) + ". " + aliment[1])
-        try:
-            choice = int(input())
-            clear()
-            if 0 <= choice < len(aliments):
-                self.show_substitute_infos(aliments[choice])
-            else:
-                print("Choix inconnu")
-        except ValueError:
-            clear()
-            print("Veuillez entrer un nombre entier svp")
+        print("-1. Revenir au menu principal")
+        while True:
+            try:
+                choice = int(input())
+                clear()
+                if choice == -1:
+                    self.main_menu()
+                if 0 <= choice < len(aliments):
+                    self.show_substitute_infos(aliments[choice])
+                else:
+                    print("Choix inconnu")
+            except ValueError:
+                clear()
+                print("Veuillez entrer un nombre entier svp")
 
     def show_substitute_infos(self, aliment):
         substitute = self.database.select("substitute", "id=" + str(aliment[-1]))[0]
@@ -84,10 +91,13 @@ class Dialogue:
         for index, product in enumerate(products):
             print(str(index) + ". " + product["product_name"])
             options.append(product)
+        print("-1. Revenir au menu principal")
         while True:
             try:
                 choice = int(input())
                 clear()
+                if choice == -1:
+                    self.main_menu()
                 if 0 <= choice < len(options):
                     return self.show_product_info(options[choice], category)
                 else:
