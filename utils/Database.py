@@ -20,6 +20,7 @@ class Database:
         if foreign_id:
             data += ", " + str(foreign_id)
         instruction = "INSERT INTO {} ({}) VALUES ({})".format(table, headers, data)
+        print(instruction)
         self.cursor.execute(instruction)
         self.conn.commit()
         return self.cursor.lastrowid

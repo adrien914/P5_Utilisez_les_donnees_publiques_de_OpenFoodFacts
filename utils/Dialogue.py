@@ -145,7 +145,10 @@ class Dialogue:
             headers = ["product_name", "category", "nutrition_grades", "stores"]
             data = []
             for header in headers:
-                data.append("'" + substitut[header].replace("'", "\\'") + "'")
+                try:
+                    data.append("'" + substitut[header].replace("'", "\\'") + "'")
+                except KeyError:
+                    data.append("NULL")
             substitute_id = self.database.insert("substitute", headers, data)
         already_exists = self.database.select("aliment", "product_name = '{}'"
                                               .format(product["product_name"].replace("'", "\\'")))
@@ -156,7 +159,10 @@ class Dialogue:
             headers = ["product_name", "category", "nutrition_grades", "stores"]
             data = []
             for header in headers:
-                data.append("'" + product[header].replace("'", "\\'") + "'")
+                try:
+                    data.append("'" + product[header].replace("'", "\\'") + "'")
+                except KeyError:
+                    data.append("NULL")
             headers.append("substitute_id")
             self.database.insert("aliment", headers, data, substitute_id)
 
@@ -173,7 +179,7 @@ class Dialogue:
             r = requests.get(search_url + params).json()
             if r["count"]:
                 substitut = r["products"][0]
-                print("Substitut:")
+                print("\nSubstitut:")
                 print("Nom:", substitut["product_name"])
                 print("Grade nutritionnel:", substitut["nutrition_grades"])
                 print("Ou l'acheter:", substitut["stores"] + "\n")
