@@ -7,37 +7,37 @@
 - Le fichier requirements.txt pour installer les librairies python
 
 ## Installation
-Don't forget to have a mysql server running on localhost:3306 and 
-to install the sql script that's in the database directory first.
-The base user is "user" and the base password is "test", you can change
-them in Database.py line 7.
+N'oubliez pas d'avoir un serveur mysql qui tourne sur localhost:3306 et 
+d'y executer le script se trouvant dans database.
+L'utilisateur de base est "user" et le password est "test", vous pouvez
+les changer dans Database.py ligne 7.
 
-- To install and run this app, first, clone the repository by running:
+- Pour installer l'application et la lancer, commencez par cloner le repo:
 ```bash
 git clone https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts.git
 ```
     
-- Install virtualenv if it's not already done:
+- Installez virtualenv si ce n'est pas déja fait:
 ```bash
 pip3 install virtualenv
 ```
 
-- Create a virtual environment by running:
+- Créez un environnement virtuel:
 ```bash
 virtualenv venv
 ```
 
-- Activate the virtual environment by running:
+- Activez cet environnement:
 ```bash
 source venv/bin/activate
 ```
 
-- Install the requirements by running:
+- Installez les requirements:
 ```bash
 pip3 install -r requirements.txt
 ```
 
-- Run the program with the command:
+- Lancez le programme:
 ```bash
 python3 main.py
 ```
