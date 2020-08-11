@@ -87,10 +87,8 @@ class Dialogue:
     def show_products(self, category):
         request = requests.get(category["url"] + ".json")
         products = request.json()["products"]
-        options = []
         for index, product in enumerate(products):
             print(str(index) + ". " + product["product_name"])
-            options.append(product)
         print("-1. Revenir au menu principal")
         while True:
             try:
@@ -98,8 +96,8 @@ class Dialogue:
                 clear()
                 if choice == -1:
                     self.main_menu()
-                if 0 <= choice < len(options):
-                    return self.show_product_info(options[choice], category)
+                if 0 <= choice < len(products):
+                    return self.show_product_info(products[choice], category)
                 else:
                     print("Choix inconnu")
             except ValueError:
