@@ -1,13 +1,46 @@
 # P5 Utilisez les donnees publiques de OpenFoodFacts
 
 ## Contenu du repo
-- le script d'initialisation de la bdd dans database
-- le code de l'application dans utils et main.py
+- Le script d'initialisation de la bdd dans database
+- Le code de l'application dans utils et main.py
 - La documentation dans le README.md
+- Le fichier requirements.txt pour installer les librairies python
 
 ## Installation
+Don't forget to have a mysql server running on localhost:3306 and 
+to install the sql script that's in the database directory first.
+The base user is "user" and the base password is "test", you can change
+them in Database.py line 7.
 
+- To install and run this app, first, clone the repository by running:
+```bash
+git clone https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts.git
+```
+    
+- Install virtualenv if it's not already done:
+```bash
+pip3 install virtualenv
+```
 
+- Create a virtual environment by running:
+```bash
+virtualenv venv
+```
+
+- Activate the virtual environment by running:
+```bash
+source venv/bin/activate
+```
+
+- Install the requirements by running:
+```bash
+pip3 install -r requirements.txt
+```
+
+- Run the program with the command:
+```bash
+python3 main.py
+```
 
 ## Fonctionnalités
 
