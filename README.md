@@ -65,12 +65,10 @@ python3 main.py
     Au niveau du code on mettra:
         - Une méthode qui récupère les catégories dans un certain intervalle
         ( ex: les 10 premières catégories que l'api renvoie ) puis qui
-        utilisera enumerate pour afficher "index: nom de la catégorie"
-        et ajouter les data de la catégorie à ce même index dans un 
-        dictionnaire ( exemple: options[index] = categorie ).
+        utilisera enumerate pour afficher "index: nom de la catégorie".
         Cette méthode permettra également de choisir la catégorie avec un
-        input() qui appellera la clé du dictionnaire correspondant au choix
-        fait dans l'input ( exemple: print_products(options[input()])
+        input() qui appellera l'index de "categories" correspondant au choix
+        fait dans l'input ( exemple: print_products(categories[input()])
   
 #### Afficher les produits et en choisir un
     Le programme doit aller chercher les produits contenus dans une catégorie
