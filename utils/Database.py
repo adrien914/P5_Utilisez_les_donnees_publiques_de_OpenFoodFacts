@@ -11,6 +11,7 @@ class Database:
         self.open_api = OpenApi()
         aliments = self.select("aliment")
         if len(aliments) < number_of_categories * aliments_per_category:
+            print("initialisation de la base de données...")
             self.fill_database()
 
     def select(self, table, conditions=None):
@@ -42,7 +43,6 @@ class Database:
         for category in categories:
             name = "'" + category["name"].replace("'", "\\'") + "'"
             url = "'" + category["url"] + "'"
-            print(name)
             if not self.select("category", "name={}".format(name)):
                 self.insert("category", ["name", "url"], [name, url])
         categories = self.select("category")

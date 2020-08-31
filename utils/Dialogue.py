@@ -70,9 +70,10 @@ class Dialogue:
 
     def show_substitute_infos(self, aliment):
         substitute = self.database.select("substitute", "id=" + str(aliment[-1]))[0]
+        category = self.database.select("category", "id=" + str(substitute[2]))
         print("Substitut à {}:".format(aliment[1]))
         print("nom:", substitute[1])
-        print("categorie:", substitute[2])
+        print("categorie:", category[0][1])
         print("grade nutritionnel:", substitute[3])
         print("Magasins:", substitute[4])
         print("\nAppuyez sur entrée pour revenir au menu principal")
@@ -150,7 +151,6 @@ class Dialogue:
     def search_substitute(self, product: dict, category: list) -> dict:
         substitut = None
         search_url = "https://fr.openfoodfacts.org/cgi/search.pl"
-        print("search sub")
         for i in range(0, 5):
             # get ascii value of A and add the current index to it so we can get the next letters
             nutrition_grade = chr(ord("A") + i)
@@ -158,14 +158,22 @@ class Dialogue:
                 print("Nous n'avons pas pu trouver de substitut plus sain à ce produit")
                 break
             params = Dialogue.generate_search_params(category[1], nutrition_grade)
-            print(category)
             r = requests.get(search_url + params).json()
             if r["count"]:
                 substitut = r["products"][0]
                 print("\nSubstitut:")
-                print("Nom:", substitut["product_name"])
-                print("Grade nutritionnel:", substitut["nutrition_grades"])
-                print("Ou l'acheter:", substitut["stores"] + "\n")
+                try:
+                    print("Nom:", substitut["product_name"])
+                except KeyError:
+                    pass
+                try:
+                    print("Grade nutritionnel:", substitut["nutrition_grades"])
+                except KeyError:
+                    pass
+                try:
+                    print("Ou l'acheter:", substitut["stores"] + "\n")
+                except KeyError:
+                    pass
                 break
         if substitut:
             substitut["category"] = category[1]
