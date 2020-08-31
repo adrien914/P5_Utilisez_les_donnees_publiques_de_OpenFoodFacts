@@ -1,15 +1,14 @@
 from utils.terminal import clear
 from utils.Database import Database
 import requests
-
+from utils.OpenApi import OpenApi
 
 class Dialogue:
-    steps = ("choice", "categories", "products")
-    current_step = 0
 
     def __init__(self):
         self.database = Database()
         self.main_menu()
+        self.open_api = OpenApi()
 
     def main_menu(self):
         options = [
@@ -32,11 +31,7 @@ class Dialogue:
                 print("Veuillez entrer un nombre entier svp")
 
     def show_categories(self):
-        request = requests.get("https://fr.openfoodfacts.org/categories.json")
-        if request.status_code != 200:
-            raise Exception("Il y a eu un problème avec la connexion a l'api OpenFoodFacts "
-                            "veuillez reessayer plus tard")
-        categories = request.json()["tags"][:10]
+        categories = self.open_api.get_categories()
         for index, category in enumerate(categories):
             print(str(index) + ". " + category["name"])
         print("-1. Revenir au menu principal")

@@ -1,22 +1,24 @@
 import mysql.connector
+from settings import number_of_categories, aliments_per_category
+from utils.OpenApi import OpenApi
 
 
 class Database:
 
-    number_of_categories = 10
-    aliments_per_category = 20
-
     def __init__(self):
-        self.conn = mysql.connector.connect(host="0.0.0.0", port=3306, user="user", password="test", database="myDb")
+        self.conn = mysql.connector.connect(host="0.0.0.0", port=3306, user="root", password="root", database="myDb")
         self.cursor = self.conn.cursor()
-        aliments = self.select("Aliment")
-        if len(aliments) < self.number_of_categories * self.aliments_per_category:
+        self.open_api = OpenApi()
+        aliments = self.select("aliment")
+        if len(aliments) < number_of_categories * aliments_per_category:
             self.fill_database()
 
     def select(self, table, conditions=None):
         instruction = "SELECT * FROM " + table
         if conditions:
             instruction += " WHERE " + conditions
+        print(instruction)
+
         self.cursor.execute(instruction)
         return self.cursor.fetchall()
 
@@ -31,3 +33,9 @@ class Database:
         return self.cursor.lastrowid
 
     def fill_database(self):
+        categories = self.open_api.get_categories()
+        for category in categories:
+            name = category["name"].replace("'", "\\'")
+            if not self.select("category", "name='{}'".format(name)):
+                self.insert("category", ["name"], [category["name"]])
+
