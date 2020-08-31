@@ -31,9 +31,9 @@ class Dialogue:
                 print("Veuillez entrer un nombre entier svp")
 
     def show_categories(self):
-        categories = self.open_api.get_categories()
+        categories = self.database.select("category")
         for index, category in enumerate(categories):
-            print(str(index) + ". " + category["name"])
+            print(str(index) + ". " + category[1])
         print("-1. Revenir au menu principal")
         while True:
             try:
@@ -49,7 +49,7 @@ class Dialogue:
                 print("Veuillez entrer un nombre entier svp")
 
     def show_substitutes(self):
-        aliments = self.database.select("aliment")
+        aliments = self.database.select("aliment", "substitute_id is not null")
         print("Choisissez un aliment:")
         for index, aliment in enumerate(aliments):
             print(str(index) + ". " + aliment[1])
@@ -80,10 +80,9 @@ class Dialogue:
         self.main_menu()
 
     def show_products(self, category):
-        request = requests.get(category["url"] + ".json")
-        products = request.json()["products"]
+        products = self.database.select("aliment", "category=" + str(category[0]))
         for index, product in enumerate(products):
-            print(str(index) + ". " + product["product_name"])
+            print(str(index) + ". " + product[1])
         print("-1. Revenir au menu principal")
         while True:
             try:
@@ -108,15 +107,15 @@ class Dialogue:
                  "tagtype_1=nutrition_grades&" \
                  "tag_contains_1=contains&" \
                  "tag_1={}&" \
-                 "json=1".format(category["id"], nutrition_grade)
+                 "json=1".format(category[0], nutrition_grade)
         return params
 
     def show_product_info(self, product, category):
         print("Infos produit:")
-        print("Nom:", product["product_name"])
-        print("Grade nutritionnel:", product["nutrition_grades"])
+        print("Nom:", product[1])
+        print("Grade nutritionnel:", product[3])
         if "stores" in product:
-            print(product["stores"] + "\n")
+            print(product[4] + "\n")
         substitut = self.search_substitute(product, category)
         if substitut:
             print("Voulez-vous enregistrer le substitut en base de données ?")
@@ -136,39 +135,30 @@ class Dialogue:
             substitute_id = already_exists[0][0]
         else: # if the substitute doesn't exist create it
             headers = ["product_name", "category", "nutrition_grades", "stores"]
+            substitut["category"] = product[2]
             data = []
             for header in headers:
                 try:
                     data.append("'" + substitut[header].replace("'", "\\'") + "'")
                 except KeyError:
                     data.append("NULL")
+                except AttributeError:
+                    data.append(str(substitut["category"]))
             substitute_id = self.database.insert("substitute", headers, data)
-        already_exists = self.database.select("aliment", "product_name = '{}'"
-                                              .format(product["product_name"].replace("'", "\\'")))
-        if already_exists:
-            print("Cet aliment a déjà été substitué.")
-        else:
-            product["category"] = substitut["category"]
-            headers = ["product_name", "category", "nutrition_grades", "stores"]
-            data = []
-            for header in headers:
-                try:
-                    data.append("'" + product[header].replace("'", "\\'") + "'")
-                except KeyError:
-                    data.append("NULL")
-            headers.append("substitute_id")
-            self.database.insert("aliment", headers, data, substitute_id)
+        self.database.update("aliment", ["substitute_id=" + str(substitute_id)], ["id=" + str(product[0])])
 
-    def search_substitute(self, product: dict, category: dict) -> dict:
+    def search_substitute(self, product: dict, category: list) -> dict:
         substitut = None
         search_url = "https://fr.openfoodfacts.org/cgi/search.pl"
+        print("search sub")
         for i in range(0, 5):
             # get ascii value of A and add the current index to it so we can get the next letters
             nutrition_grade = chr(ord("A") + i)
-            if ord(nutrition_grade) >= ord(product["nutrition_grades"]):  # if the ng is the same as the product break
+            if ord(nutrition_grade) >= ord(product[3]):  # if the nutrigrade is the same as the product's, break
                 print("Nous n'avons pas pu trouver de substitut plus sain à ce produit")
                 break
-            params = Dialogue.generate_search_params(category, nutrition_grade)
+            params = Dialogue.generate_search_params(category[1], nutrition_grade)
+            print(category)
             r = requests.get(search_url + params).json()
             if r["count"]:
                 substitut = r["products"][0]
@@ -178,6 +168,6 @@ class Dialogue:
                 print("Ou l'acheter:", substitut["stores"] + "\n")
                 break
         if substitut:
-            substitut["category"] = category["name"]
+            substitut["category"] = category[1]
             return substitut
         return {}

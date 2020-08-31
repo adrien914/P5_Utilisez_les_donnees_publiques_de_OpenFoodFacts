@@ -12,5 +12,7 @@ class OpenApi:
         categories = request.json()["tags"][:number_of_categories]
         return categories
 
-    def get_aliments(self):
-        return
+    def get_aliments(self, category):
+        request = requests.get(category[2] + ".json")
+        products = request.json()["products"]
+        return products

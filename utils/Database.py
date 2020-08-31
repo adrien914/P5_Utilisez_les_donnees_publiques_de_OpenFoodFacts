@@ -17,8 +17,6 @@ class Database:
         instruction = "SELECT * FROM " + table
         if conditions:
             instruction += " WHERE " + conditions
-        print(instruction)
-
         self.cursor.execute(instruction)
         return self.cursor.fetchall()
 
@@ -32,10 +30,35 @@ class Database:
         self.conn.commit()
         return self.cursor.lastrowid
 
+    def update(self, table: str, data: list, conditions: list):
+        data = ",".join(data)
+        conditions = ",".join(conditions)
+        instruction = "UPDATE " + table + " SET " + data + " WHERE " + conditions
+        self.cursor.execute(instruction)
+        self.conn.commit()
+
     def fill_database(self):
         categories = self.open_api.get_categories()
         for category in categories:
-            name = category["name"].replace("'", "\\'")
-            if not self.select("category", "name='{}'".format(name)):
-                self.insert("category", ["name"], [category["name"]])
+            name = "'" + category["name"].replace("'", "\\'") + "'"
+            url = "'" + category["url"] + "'"
+            print(name)
+            if not self.select("category", "name={}".format(name)):
+                self.insert("category", ["name", "url"], [name, url])
+        categories = self.select("category")
+        for category in categories:
+            aliments = self.open_api.get_aliments(category)
+            for aliment in aliments:
+                headers = ["product_name", "category", "nutrition_grades", "stores"]
+                aliment["category"] = category[0]
+                data = []
+                for header in headers:
+                    try:
+                        data.append("'" + aliment[header].replace("'", "\\'") + "'")
+                    except KeyError:
+                        data.append("NULL")
+                    except AttributeError:
+                        data.append(str(aliment[header]))
+                self.insert("aliment", headers, data)
+
 
