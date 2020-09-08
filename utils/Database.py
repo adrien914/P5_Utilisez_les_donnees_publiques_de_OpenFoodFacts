@@ -1,12 +1,14 @@
 import mysql.connector
-from settings import number_of_categories, aliments_per_category
+from settings import number_of_categories, aliments_per_category, mysql_db, mysql_host, mysql_port, \
+    mysql_user, mysql_password
 from utils.OpenApi import OpenApi
-
+from utils.terminal import clear
 
 class Database:
 
     def __init__(self):
-        self.conn = mysql.connector.connect(host="0.0.0.0", port=3306, user="root", password="root", database="myDb")
+        self.conn = mysql.connector.connect(host=mysql_host, port=mysql_port, user=mysql_user, password=mysql_password,
+                                            database=mysql_db)
         self.cursor = self.conn.cursor()
         aliments = self.select("aliment")
         if len(aliments) < number_of_categories * aliments_per_category:
@@ -63,13 +65,17 @@ class Database:
         This function initiates the database with all the data needed
         :return: None
         """
+        print("Récupération des catégories a partir de l'API OpenFoodFacts ...")
         categories = OpenApi().get_categories()
+        print("Insertion des catégories en base de données ...")
         for category in categories:
             name = "'" + category["name"].replace("'", "\\'") + "'"
             url = "'" + category["url"] + "'"
             if not self.select("category", "name={}".format(name)):
                 self.insert("category", ["name", "url"], [name, url])
+        print("Terminé. Récupération des aliments pour chaque catégorie ...")
         categories = self.select("category")
+        print("Insertion des aliments dans les catégorie: ...")
         for category in categories:
             aliments = OpenApi().get_aliments(category)
             for aliment in aliments:
@@ -84,5 +90,5 @@ class Database:
                     except AttributeError:
                         data.append(str(aliment[header]))
                 self.insert("aliment", headers, data)
-
+        clear()
 
