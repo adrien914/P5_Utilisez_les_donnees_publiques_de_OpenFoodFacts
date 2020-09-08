@@ -7,10 +7,10 @@
 - Le fichier requirements.txt pour installer les librairies python
 
 ## Installation
-N'oubliez pas d'avoir un serveur mysql qui tourne sur localhost:3306 et 
+N'oubliez pas d'avoir un serveur mysql qui tourne sur 0.0.0.0:3306 et 
 d'y executer le script se trouvant dans database.
-L'utilisateur de base est "user" et le password est "test", vous pouvez
-les changer dans Database.py ligne 7.
+L'utilisateur de base est "root" et le password est "root", vous pouvez
+changer les informations de la bdd dans settings.py 
 
 - Pour installer l'application et la lancer, commencez par cloner le repo:
 ```bash
