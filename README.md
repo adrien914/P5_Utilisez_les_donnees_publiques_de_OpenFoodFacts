@@ -1,4 +1,4 @@
-# P5 UUse OpenFoodFacts public data
+# P5 Use OpenFoodFacts public data
 
 Read this in other languages:
 
