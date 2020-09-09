@@ -1,5 +1,10 @@
 # P5 Utilisez les donnees publiques de OpenFoodFacts
 
+Lisez ce fichier dans d'autres langues:
+
+<a href="https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts/blob/master/README.md"><img src="https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts/blob/master/img/english.png"></a>
+<a href="https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts/blob/master/README.fr.md"><img src="https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts/blob/master/img/french.png"></a>
+
 ## Contenu du repo
 - Le script d'initialisation de la bdd dans database
 - Le code de l'application dans utils et main.py
