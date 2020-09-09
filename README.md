@@ -95,10 +95,20 @@ python3 main.py
     pour communiquer avec la base de données.
     
     Au niveau du code on aura:
-        - Une méthode __init__ qui va initialiser la connection a la bdd
+        - Une méthode __init__ qui va initialiser la connection a la bdd et
+        la récupération des données de la base OpenFoodFacts si besoin
         - Une méthode insert qui génèrera une instruction SQL INSERT a partir
         de headers et données données en arguments dans la table donnée en
         arguments
         - Une méthode select qui génèrera et executera une instruction SQL 
         SELECT pour la table donnée en argument avec les conditions données
         puis renverra le retour.
+        - Une méthode update qui générera et éxécutera une instruction SQL UPDATE sur la table
+        donnée en arguments avec les valeurs et conditions données en argument
+        - Une méthode pour remplir la base de données a partir de l'api OpenFoodFacts au cas
+        ou la bdd ne soit pas encore remplie.
+
+#### Pouvoir modifier les valeurs importantes facilement
+    Le programme inclura un fichier settings.py dans lequel on pourra modifier facilement
+    les identifiants de connexion a la base de données et le nombre d'aliments et de produits
+    à récupérer
