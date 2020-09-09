@@ -2,7 +2,7 @@
 
 Read this in other languages:
 
-[<a href="https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts/blob/master/README.md"><img src="https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts/blob/master/img/english.png"></a>] 
+<a href="https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts/blob/master/README.md"><img src="https://github.com/adrien914/P5_Utilisez_les_donnees_publiques_de_OpenFoodFacts/blob/master/img/english.png"></a>
 
 
 ## Content of repository
