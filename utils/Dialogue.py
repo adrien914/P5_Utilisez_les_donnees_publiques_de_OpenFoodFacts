@@ -3,6 +3,7 @@ from utils.Database import Database
 import requests
 from utils.OpenApi import OpenApi
 
+
 class Dialogue:
 
     def __init__(self):
@@ -20,19 +21,20 @@ class Dialogue:
             {"text": "Voir mes aliments substitués", "method": self.show_substitutes},
         ]  # Put the options in a list as dicts with a pointer to the method they have to call
         clear()
-        print("Choisissez une option:")
-        for index, option in enumerate(options):  # foreach option print it with its index
-            print(str(index) + ". " + option["text"])
         while True:
+            for index, option in enumerate(options):  # foreach option print it with its index
+                print(str(index) + ". " + option["text"])
+            print("\x1b[6;32;40mChoisissez une option en écrivant le chiffre correspondant et "
+                  "appuyez sur entrée:\x1b[0m")
             try:
                 choice = int(input())
                 clear()
                 if 0 <= choice < len(options):  # if the input is within the range of options available
                     return options[choice]["method"]()  # call the method that's in the option at 'index'
-                print("Choix inconnu")
+                print("\x1b[6;31;40mChoix inconnu\x1b[0m")
             except ValueError:  # int(input()) throws a ValueError
                 clear()
-                print("Veuillez entrer un nombre entier svp")
+                print("\x1b[6;31;40mVeuillez entrer un nombre entier svp\x1b[0m")
 
     def show_categories(self) -> None:
         """
@@ -41,10 +43,12 @@ class Dialogue:
         :return: None
         """
         categories = self.database.select("category")  # Get all the categories in the db
-        for index, category in enumerate(categories):  # for each category
-            print(str(index) + ". " + category[1])  # print the category name and its index
-        print("-1. Revenir au menu principal")
         while True:
+            for index, category in enumerate(categories):  # for each category
+                print(str(index) + ". " + category[1])  # print the category name and its index
+            print("-1. Revenir au menu principal")
+            print("\x1b[6;32;40mChoisissez une option en écrivant le chiffre correspondant et "
+                  "appuyez sur entrée:\x1b[0m")
             try:
                 choice = int(input())
                 clear()
@@ -53,10 +57,10 @@ class Dialogue:
                 if 0 <= choice < len(categories):
                     # Show the products corresponding to the chosen category
                     return self.show_products(categories[choice])
-                print("Choix inconnu")
-            except ValueError:
+                print("\x1b[6;31;40mChoix inconnu\x1b[0m")
+            except ValueError:  # int(input()) throws a ValueError
                 clear()
-                print("Veuillez entrer un nombre entier svp")
+                print("\x1b[6;31;40mVeuillez entrer un nombre entier svp\x1b[0m")
 
     def show_products(self, category: list) -> None:
         """
@@ -67,10 +71,12 @@ class Dialogue:
         """
         # Retrieve the products that have the chosen category's id in their category field
         products = self.database.select("aliment", "category=" + str(category[0]))
-        for index, product in enumerate(products):
-            print(str(index) + ". " + product[1])
-        print("-1. Revenir au menu principal")
         while True:
+            for index, product in enumerate(products):
+                print(str(index) + ". " + product[1])
+            print("-1. Revenir au menu principal")
+            print("\x1b[6;32;40mChoisissez une option en écrivant le chiffre correspondant et "
+                  "appuyez sur entrée:\x1b[0m")
             try:
                 choice = int(input())
                 clear()
@@ -79,10 +85,10 @@ class Dialogue:
                 if 0 <= choice < len(products):
                     return self.show_product_info(products[choice], category)
                 else:
-                    print("Choix inconnu")
-            except ValueError:
+                    print("\x1b[6;31;40mChoix inconnu\x1b[0m")
+            except ValueError:  # int(input()) throws a ValueError
                 clear()
-                print("Veuillez entrer un nombre entier svp")
+                print("\x1b[6;31;40mVeuillez entrer un nombre entier svp\x1b[0m")
 
     @staticmethod
     def generate_search_params(category: list, nutrition_grade: str) -> str:
@@ -121,9 +127,19 @@ class Dialogue:
             print("Voulez-vous enregistrer le substitut en base de données ?")
             print("o. Oui")
             print("n. Non")
-            choice = input()
-            if str(choice).lower() == "o":
-                self.save_substitute(substitut, product)
+            print("\x1b[6;32;40mChoisissez une option en écrivant la lettre correspondante et "
+                  "appuyez sur entrée:\x1b[0m")
+            while True:
+                choice = input()
+                if str(choice).lower() == "o":
+                    self.save_substitute(substitut, product)
+                    print("\x1b[6;32;40mSubstitut sauvegardé avec succès!\x1b[0m")
+                    break
+                elif str(choice).lower() == "n":
+                    print("Substitut non sauvegardé.")
+                    break
+                else:
+                    print("\x1b[6;31;40mVeuillez entrer un choix valide svp\x1b[0m")
         print("\nAppuyez sur entrée pour revenir au menu principal")
         input()
         self.main_menu()
@@ -195,11 +211,12 @@ class Dialogue:
         :return: None
         """
         aliments = self.database.select("aliment", "substitute_id is not null")
-        print("Choisissez un aliment:")
-        for index, aliment in enumerate(aliments):
-            print(str(index) + ". " + aliment[1])
-        print("-1. Revenir au menu principal")
         while True:
+            for index, aliment in enumerate(aliments):
+                print(str(index) + ". " + aliment[1])
+            print("-1. Revenir au menu principal")
+            print("\x1b[6;32;40mChoisissez une option en écrivant le chiffre correspondant et "
+                  "appuyez sur entrée:\x1b[0m")
             try:
                 choice = int(input())
                 clear()
@@ -208,10 +225,10 @@ class Dialogue:
                 if 0 <= choice < len(aliments):
                     self.show_substitute_infos(aliments[choice])
                 else:
-                    print("Choix inconnu")
-            except ValueError:
+                    print("\x1b[6;31;40mChoix inconnu\x1b[0m")
+            except ValueError:  # int(input()) throws a ValueError
                 clear()
-                print("Veuillez entrer un nombre entier svp")
+                print("\x1b[6;31;40mVeuillez entrer un nombre entier svp\x1b[0m")
 
     def show_substitute_infos(self, aliment) -> None:
         """
