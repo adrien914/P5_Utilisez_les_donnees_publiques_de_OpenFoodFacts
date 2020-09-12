@@ -4,6 +4,7 @@ from settings import number_of_categories, aliments_per_category, mysql_db, mysq
 from utils.OpenApi import OpenApi
 from utils.terminal import clear
 
+
 class Database:
 
     def __init__(self):
